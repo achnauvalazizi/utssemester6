@@ -1,39 +1,30 @@
 from django.db import models
 
-# Create your models here.
+class User(models.Model):
+  id_pengguna = models.AutoField(primary_key=True)
+  nama_pengguna = models.CharField(max_length=255, null=False)
+  email = models.EmailField(unique=True, null=False)
+  password = models.CharField(max_length=255, null=False)
+  saldo = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
-# Modul User
-class User:
-    def __init__(self, name, email):
-        self.name = name
-        self.email = email
+  def __str__(self):
+    return self.nama_pengguna
 
-# Modul Account
-class Account:
-    def __init__(self, user, balance=0):
-        self.user = user
-        self.balance = balance
+class RekeningBank(models.Model):
+  id_rekening = models.AutoField(primary_key=True)
+  id_pengguna = models.ForeignKey(User, on_delete=models.CASCADE)
+  nama_bank = models.CharField(max_length=255, null=False)
+  nomor_rekening = models.CharField(max_length=255, null=False)
 
-    def deposit(self, amount):
-        self.balance += amount
-        return self.balance
+  def __str__(self):
+    return f"{self.nama_bank} - {self.nomor_rekening}"
 
-    def withdraw(self, amount):
-        if amount > self.balance:
-            return 'Insufficient balance'
-        else:
-            self.balance -= amount
-            return self.balance
+class Transaksi(models.Model):
+  id_transaksi = models.AutoField(primary_key=True)
+  id_pengirim = models.ForeignKey(User, related_name="transaksi_pengirim", on_delete=models.CASCADE)
+  id_penerima = models.ForeignKey(User, related_name="transaksi_penerima", on_delete=models.CASCADE)
+  jumlah_transfer = models.DecimalField(max_digits=10, decimal_places=2)
+  tanggal_transaksi = models.DateTimeField(auto_now_add=True)
 
-# Modul Transaction
-class Transaction:
-    def __init__(self, sender: Account, receiver: Account):
-        self.sender = sender
-        self.receiver = receiver
-
-    def transfer(self, amount):
-        if self.sender.withdraw(amount) != 'Insufficient balance':
-            self.receiver.deposit(amount)
-            return 'Transfer successful'
-        else:
-            return 'Transfer failed'
+  def __str__(self):
+    return f"Transfer dari {self.id_pengirim} ke {self.id_penerima} - {self.jumlah_transfer}"
