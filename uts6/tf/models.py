@@ -1,6 +1,3 @@
-from rest_framework import serializers
-from .models import Kategori, Produk
-
 from django.db import models
 
 class User(models.Model):
