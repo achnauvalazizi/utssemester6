@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.generic import ListView, DetailView
-from .models import User, RekeningBang, Transaksi
+from .models import User, RekeningBank, Transaksi
 
 class UserList(ListView):
     model = User
@@ -10,11 +10,11 @@ class UserList(ListView):
 class UserDetail(DetailView):
     model = User
 
-class RekeningBangList(ListView):
+class RekeningBankList(ListView):
     model = RekeningBank
-    queryset = RekeningBang.objects.all()
+    queryset = RekeningBank.objects.all()
 
-class RekeningBangDetail(DetailView):
+class RekeningBankDetail(DetailView):
     model = RekeningBank
 
 class TransaksiList(ListView):
